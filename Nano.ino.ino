@@ -7,11 +7,12 @@ char pass[] = "098765432";       // Your network password
 
 // Sensor and threshold settings
 const int lightSensorPin = A4;   // Analog pin connected to the light sensor
-int threshold = 500;             // Threshold value for sunlight detection (adjust as needed)
+int highThreshold = 500;         // High threshold value for bright light
+int lowThreshold = 200;          // Low threshold value for dim light
 
 // IFTTT Webhook details
 char serverAddress[] = "maker.ifttt.com";  // The server address for IFTTT Webhooks
-String eventName = "Light_trigger";        // Your IFTTT event name
+String eventName = "Light_trigger";        // IFTTT event name (single trigger)
 
 // Your IFTTT Webhook key
 const String IFTTT_Key = "ecptXDUSTOgRx9PL5zqy-7cReX1sWuZIckDcqcVgAU-";  // Your unique IFTTT key
@@ -31,10 +32,10 @@ void loop() {
   Serial.print("Light Level: ");
   Serial.println(lightLevel);  // Print the current light level to the Serial Monitor
 
-  // Check if the light level exceeds the threshold
-  if (lightLevel > threshold) {  
-    triggerIFTTTEvent();  // Trigger the IFTTT event if light is above the threshold
-    delay(10000);         // Wait 10 seconds before checking the light level again
+  // Check if the light level is outside the defined thresholds
+  if (lightLevel > highThreshold || lightLevel < lowThreshold) {  //Triggers alert through email when light level is more than highthreshold and when it is low than the lowthreshold.
+    triggerIFTTTEvent();  // Trigger the IFTTT event
+    delay(10000);  // Wait 10 seconds before checking again
   }
 
   delay(1000);  // Delay for 1 second before the next reading to reduce sensor polling frequency
